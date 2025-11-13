@@ -9,32 +9,34 @@
  */
 function formatDate(date, fromFormat, toFormat) {
   const splitDate = date.split(fromFormat[3]);
-  const objectDate = {};
-  const modifiedToFormat = [...toFormat];
+  const currentDate = {};
   const newDate = [];
 
   for (let i = 0; i < splitDate.length; i++) {
-    objectDate[fromFormat[i]] = splitDate[i];
+    currentDate[fromFormat[i]] = splitDate[i];
   }
+
+  const convertedDate = { ...currentDate };
 
   for (let i = 0; i < splitDate.length; i++) {
-    if (modifiedToFormat[i] === 'YY' && fromFormat.includes('YYYY')) {
-      modifiedToFormat[i] = 'YYYY';
-      objectDate.YYYY = objectDate.YYYY.slice(-2);
+    if (toFormat[i] === 'YY' && fromFormat.includes('YYYY')) {
+      convertedDate.YYYY = currentDate.YYYY;
+      convertedDate.YY = currentDate.YYYY.slice(-2);
     }
 
-    if (modifiedToFormat[i] === 'YYYY' && fromFormat.includes('YY')) {
-      if (Number(objectDate.YY) < 30) {
-        objectDate.YY = Number(objectDate.YY) + 2000;
+    if (toFormat[i] === 'YYYY' && fromFormat.includes('YY')) {
+      if (Number(currentDate.YY) < 30) {
+        convertedDate.YY = currentDate.YY;
+        convertedDate.YYYY = Number(currentDate.YY) + 2000;
       } else {
-        objectDate.YY = Number(objectDate.YY) + 1900;
+        convertedDate.YY = currentDate.YY;
+        convertedDate.YYYY = Number(currentDate.YY) + 1900;
       }
-      modifiedToFormat[i] = 'YY';
     }
-    newDate.push(objectDate[modifiedToFormat[i]]);
+    newDate.push(convertedDate[toFormat[i]]);
   }
 
-  return newDate.join(modifiedToFormat[3]);
+  return newDate.join(toFormat[3]);
 }
 
 module.exports = formatDate;
