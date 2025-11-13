@@ -10,6 +10,7 @@
 function formatDate(date, fromFormat, toFormat) {
   const splitDate = date.split(fromFormat[3]);
   const objectDate = {};
+  const modifiedToFormat = [...toFormat];
   const newDate = [];
 
   for (let i = 0; i < splitDate.length; i++) {
@@ -17,23 +18,23 @@ function formatDate(date, fromFormat, toFormat) {
   }
 
   for (let i = 0; i < splitDate.length; i++) {
-    if (toFormat[i] === 'YY' && fromFormat.includes('YYYY')) {
-      toFormat[i] = 'YYYY';
-      objectDate.YYYY = objectDate.YYYY % 100;
+    if (modifiedToFormat[i] === 'YY' && fromFormat.includes('YYYY')) {
+      modifiedToFormat[i] = 'YYYY';
+      objectDate.YYYY = objectDate.YYYY.slice(-2);
     }
 
-    if (toFormat[i] === 'YYYY' && fromFormat.includes('YY')) {
+    if (modifiedToFormat[i] === 'YYYY' && fromFormat.includes('YY')) {
       if (Number(objectDate.YY) < 30) {
         objectDate.YY = Number(objectDate.YY) + 2000;
       } else {
         objectDate.YY = Number(objectDate.YY) + 1900;
       }
-      toFormat[i] = 'YY';
+      modifiedToFormat[i] = 'YY';
     }
-    newDate.push(objectDate[toFormat[i]]);
+    newDate.push(objectDate[modifiedToFormat[i]]);
   }
 
-  return newDate.join(toFormat[3]);
+  return newDate.join(modifiedToFormat[3]);
 }
 
 module.exports = formatDate;
